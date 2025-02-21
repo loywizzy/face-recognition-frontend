@@ -28,14 +28,30 @@ const UpdateStudent = () => {
   }, [id]);
 
   const updateStudent = async () => {
-    const updatedStudent = { id, firstName, lastName, image };
+    // สร้าง FormData เพื่ออัปโหลดข้อมูลแบบ multipart
+    const formData = new FormData();
+    formData.append('id', id);
+    formData.append('firstName', firstName);
+    formData.append('lastName', lastName);
+    
+    if (image) {
+      formData.append('image', image); // เพิ่มไฟล์รูปภาพถ้ามี
+    }
+  
     try {
-      await axios.put(`http://localhost:5000/students/${id}`, updatedStudent);
+      // ส่งคำขอ PUT โดยใช้ FormData
+      await axios.put(`http://localhost:5000/students/${id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // ระบุชนิดข้อมูลเป็น multipart
+        },
+      });
+      
       Swal.fire({
         icon: 'success',
         title: 'Updated!',
         text: 'Student updated successfully!',
       });
+      
       navigate("/"); // ไปที่หน้า StudentManagement หลังจากอัปเดต
     } catch (error) {
       console.error("Error updating student:", error);
@@ -46,9 +62,10 @@ const UpdateStudent = () => {
       });
     }
   };
+  
 
   const handleImageChange = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
+    setImage(e.target.files[0]);
   };
 
   if (!student) {

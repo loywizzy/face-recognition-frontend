@@ -17,16 +17,6 @@ const Dashboard = () => {
     }
   };
 
-  // ดึงข้อมูลสถานะการมาเรียนของนักศึกษา
-  const fetchAttendance = async (studentId) => {
-    try {
-      const response = await axios.get(`http://localhost:5000/attendance/${studentId}`);
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching attendance:', error);
-    }
-  };
-
   // คำนวณจำนวนการมาหรือขาด
   const calculateAttendance = (studentsData) => {
     const presentCount = studentsData.filter(student => student.attendanceStatus === 'Present').length;
@@ -36,8 +26,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchStudents();
-  }, []);
-
+  }, []); 
+  
   return (
     <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">Dashboard</h1>
@@ -50,21 +40,18 @@ const Dashboard = () => {
 
         <div className="text-center bg-white p-4 shadow-md rounded-lg w-48">
           <h2 className="text-xl font-semibold">Present</h2>
-          <p className="text-3xl">{attendanceStats.present}</p>
+          <p className="text-3xl">0000</p>
         </div>
 
         <div className="text-center bg-white p-4 shadow-md rounded-lg w-48">
           <h2 className="text-xl font-semibold">Absent</h2>
-          <p className="text-3xl">{attendanceStats.absent}</p>
+          <p className="text-3xl">0000</p>
         </div>
       </div>
 
       <div className="flex justify-center space-x-6 h-auto">
         <Link to="/student-management" className="p-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300">
           Add Student
-        </Link>
-        <Link to="/attendance" className="p-4 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300">
-          Manage Attendance
         </Link>
       </div>
 
@@ -78,7 +65,6 @@ const Dashboard = () => {
               <th className="py-3 px-6">First Name</th>
               <th className="py-3 px-6">Last Name</th>
               <th className="py-3 px-6">Image</th>
-              <th className="py-3 px-6">Attendance</th>
             </tr>
           </thead>
           <tbody>
@@ -90,21 +76,12 @@ const Dashboard = () => {
                 <td className="py-4 px-6">
                   {student.image && (
                     <img
-                      src={student.image}
-                      alt="Student"
-                      className="w-12 h-12 rounded-full"
-                    />
-                  )}
-                </td>
-                <td className="py-4 px-6">
-                  {/* ดึงสถานะการมาเรียนจากฟังก์ชัน fetchAttendance */}
-                  <button
-                    onClick={() => fetchAttendance(student.id)}
-                    className="text-blue-500 hover:underline"
-                  >
-                    View Attendance
-                  </button>
-                </td>
+                    src={`http://localhost:5000${student.image}`} // ดึงรูปภาพจากเซิร์ฟเวอร์
+                    alt="Student"
+                    className="w-12 h-12 rounded-full"
+                  />
+                )}
+              </td>
               </tr>
             ))}
           </tbody>
